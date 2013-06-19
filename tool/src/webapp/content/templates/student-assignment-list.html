@@ -56,6 +56,7 @@
 			<th><a href="#" class="dueSort"><span rsf:id="msg=assignment2.student-assignment-list.tableheader.due">Due</span></a></th>
 			<th rsf:id="msg=assignment2.student-assignment-list.tableheader.feedback">Feedback</th>
 			<th rsf:id="msg=assignment2.student-assignment-list.tableheader.grade">Grade</th>
+                        <th class="irubric-col" style="display:none">View iRubric</th>
 		</tr>
 		</thead>
 		<tbody> 
@@ -102,7 +103,9 @@
 				</a>
 			</td>
 			<td rsf:id="grade">N/A</td>
-			
+			<td rsf:id="irubric" class="irubric-col" style="display:none">
+                          <a style="display:none" href="#" class="irubric-link"><img src="/sakai-gradebook-tool/images/rubric.gif" alt="iRubric Link" /></a>
+                        </td>
 			<!-- For the JS Sorting --> 
 			<!-- 
 			<td class="skip">
@@ -119,6 +122,10 @@
 	 	//Put this code in the jsp page since IE8 was having trouble with $(document).ready() function.
 	 	asnn2.setupStdntListTableParsers();
 	</script>
+        <script type="text/javascript" rsf:id="irubric-table-init">
+          // Setup in producer
+        </script>
+          
 </div>
 </body>
 </html>

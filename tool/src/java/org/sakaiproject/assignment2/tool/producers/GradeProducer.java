@@ -55,6 +55,8 @@ import org.sakaiproject.assignment2.tool.producers.renderers.AsnnInstructionsRen
 import org.sakaiproject.assignment2.tool.producers.renderers.AsnnTagsRenderer;
 import org.sakaiproject.assignment2.tool.producers.renderers.AsnnToggleRenderer;
 import org.sakaiproject.assignment2.tool.producers.renderers.AttachmentListRenderer;
+import org.sakaiproject.site.api.Site;
+import org.sakaiproject.site.api.ToolConfiguration;
 import org.sakaiproject.tool.api.SessionManager;
 
 import uk.org.ponder.beanutil.entity.EntityBeanLocator;
@@ -72,6 +74,7 @@ import uk.org.ponder.rsf.components.UIMessage;
 import uk.org.ponder.rsf.components.UIOutput;
 import uk.org.ponder.rsf.components.UISelect;
 import uk.org.ponder.rsf.components.UIVerbatim;
+import uk.org.ponder.rsf.components.UIInitBlock;
 import uk.org.ponder.rsf.components.decorators.UIFreeAttributeDecorator;
 import uk.org.ponder.rsf.evolvers.FormatAwareDateInputEvolver;
 import uk.org.ponder.rsf.evolvers.TextInputEvolver;
@@ -695,6 +698,16 @@ public class GradeProducer implements ViewComponentProducer, NavigationCaseRepor
         if (readOnly) {
             commentInput.decorate(new UIFreeAttributeDecorator("disabled", "disabled"));
         }
+        
+        //DN 2013-04-22: if can show irubric link
+        if(gradebookLogic.isShowiRubricLink())
+            initIRubric(tofill, assignment.getGradebookItemId(), studentId);
+    }
+    
+    private void initIRubric(UIContainer tofill, long gradebookObjectId, String studentId) {
+        String contextId = externalLogic.getCurrentContextId();
+        Site curSite = externalLogic.getSite(contextId);
+        UIInitBlock.make(tofill, "irubric-js-init", "asnn2gradeview.initIRubric", new Object[]{gradebookObjectId,curSite.getId(),curSite.getId(),studentId});
     }
     
     /**

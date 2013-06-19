@@ -219,4 +219,45 @@ asnn2gradeview.trimHtmlInput = function(inputString, isPreviousValue)
     return rv;
 };
 
+asnn2gradeview.initIRubric = function(gradeObjectId,gradebookUid,siteId,studentId) {
+
+    var refresh = function() {
+      	var frame = document.createElement("iFrame");
+	frame.id = "getGradeFrame";
+	var lnk = asnn2.makeIRubricUrlPrefix()+"/iRubricLink.jsp?".concat(
+                        "p=gg&tool=asnn2"
+			, "&rosterStudentId=", studentId
+			, "&gradebookItemId=", gradeObjectId
+			, "&fieldToUpdate=", "page-replace::grade_input"
+			, "&gradebookUid=", gradebookUid
+			, "&siteId=", siteId);
+	// make it hidden
+	frame.style.visibility = 'hidden';
+	frame.width = 0;
+	frame.height = 0;
+	frame.src = encodeUrl(lnk);
+	document.body.appendChild(frame);
+        jQuery("#irubric-grading-refresh").hide();
+    };
+
+    jQuery.getJSON(asnn2.makeIRubricUrlPrefix()+"/iRubricLink.jsp?p=ra&tool=asnn2&gradebookUid="+gradebookUid+"&siteId="+siteId+"&gradebookItemId="+gradeObjectId,function(data){
+        if(data && data[gradeObjectId]) {
+            jQuery("#irubric-area").show();
+            jQuery("#irubric-link").click(function(e) {
+                var urlPage = asnn2.makeIRubricUrlPrefix()+
+                    "/iRubricLink.jsp?p=g&tool=asnn2&gradebookUid="+gradebookUid+"&siteId="+siteId+"&rosterStudentId="+studentId+"&gradebookItemId="+gradeObjectId;
+                window.open(urlPage,'_blank',
+                            'width=800,height=600,top=20,left=100,menubar=yes,status=yes,location=no,toolbar=yes,scrollbars=yes,resizable=yes');
+                jQuery("#irubric-grading-refresh").show();
+               
+                jQuery("#irubric-grading-refresh").click(function(e) {
+                    refresh();
+                });
+            });
+            jQuery("#irubric-refresh").click(function(e) {
+                refresh();
+            });
+        }
+    });
+};
 

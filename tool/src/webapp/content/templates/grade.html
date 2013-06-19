@@ -194,6 +194,11 @@
         <label for="grade_input" rsf:id="grade_input_label" class="gradingLabel">Grade</label>
         <input type="text" size="10" maxlength="8" rsf:id="grade_input" id="grade_input" class="gradeInput" />
         <span rsf:id="grade_input_appender">(Out of X) or %</span>
+        <span style="margin-left:10px; display:none" id="irubric-area">
+           <a href="#" id="irubric-link"><img src="/sakai-gradebook-tool/images/rubric.gif" alt="iRubric Link" /></a>
+           <a href="#" id="irubric-refresh"><img src="/sakai-gradebook-tool/images/refresh.gif" alt="iRubric Refresh" /></a>
+           <a href="#" style="display:none" id="irubric-grading-refresh">Grading... Click here to refresh grade</a>
+        </span>
       </div>
       <div>
         <!--  for some reason, you can't use a label tag for a textarea -->
@@ -234,6 +239,10 @@
 <script type="text/javascript" rsf:id="attachment-ajax-init">
 //done in producer
 // otpkey = some value
+</script>
+<script type="text/javascript" language="JavaScript" src="/sakai-gradebook-tool/js/irubric/helper.js"></script>
+<script type="text/javascript" rsf:id="irubric-js-init">
+//done in producer
 </script>
 <script type="text/javascript">
 //<![CDATA[

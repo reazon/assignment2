@@ -27,6 +27,7 @@
    		<property name="externalLogic" ref="org.sakaiproject.assignment2.logic.ExternalLogic" />
       <property name="assignmentAuthzLogic" ref="org.sakaiproject.assignment2.logic.AssignmentAuthzLogic" />
       <property name="eventLogic" ref="org.sakaiproject.assignment2.logic.ExternalEventLogic" />
+      <property name="rubricManager" ref="com.reazon.tool.irubric.IRubricManager"/>
    </bean>
    
    <bean id="org.sakaiproject.assignment2.logic.ExternalAnnouncementLogic" class="org.sakaiproject.assignment2.logic.impl.ExternalAnnouncementLogicImpl" init-method="init">

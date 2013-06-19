@@ -67,6 +67,7 @@
         <property name="externalGradebookLogic" ref="org.sakaiproject.assignment2.logic.ExternalGradebookLogic"></property>
         <property name="messageLocator" ref="messageLocator"></property>
         <property name="asnnToggleRenderer" ref="AsnnToggleRenderer"></property>
+        <property name="externalLogic" ref="org.sakaiproject.assignment2.logic.ExternalLogic" />
     </bean> 
     
     <bean id="AsnnInstructionsRenderer"

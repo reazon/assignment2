@@ -1501,3 +1501,25 @@ var asnn2listpage = asnn2listpage || {};
         //setupJQuerySortable();
     };
 })(jQuery, asnn2listpage);
+
+var asnn2 = asnn2 || {};
+asnn2.makeIRubricUrlPrefix = function(gradebookPlacementId) {
+	if (gradebookPlacementId) {
+		return "/portal/tool/"+gradebookPlacementId;
+	} else {
+		return "/sakai-gradebook-tool";
+	}
+}
+
+asnn2.initIRubricGradeDetails = function(gradebookId, gradebookUid, siteId, studentId ) {
+    jQuery.getJSON(asnn2.makeIRubricUrlPrefix()+"/iRubricLink.jsp?p=ra&tool=asnn2&gradebookUid="+gradebookUid+"&siteId="+siteId+"&gradebookItemId="+gradebookId,function(data){
+        if (data[gradebookId] === true) {
+            jQuery(".irubric-link").click(function(event) {
+                var urlPage = asnn2.makeIRubricUrlPrefix()+
+                    "/iRubricLink.jsp?p=v&tool=asnn2&gradebookUid="+gradebookUid+"&siteId="+siteId+"&rosterStudentId="+studentId+"&gradebookItemId="+gradebookId;
+                window.open(urlPage,'_blank',
+                    'width=800,height=600,top=20,left=100,menubar=yes,status=yes,location=no,toolbar=yes,scrollbars=yes,resizable=yes');
+            }).show();
+        }
+    });
+};

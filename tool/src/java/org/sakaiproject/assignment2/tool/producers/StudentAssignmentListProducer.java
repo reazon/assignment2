@@ -23,6 +23,7 @@ package org.sakaiproject.assignment2.tool.producers;
 
 import java.awt.Color;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +43,8 @@ import org.sakaiproject.assignment2.tool.StudentAction;
 import org.sakaiproject.assignment2.tool.params.AssignmentListSortViewParams;
 import org.sakaiproject.assignment2.tool.params.SimpleAssignmentViewParams;
 import org.sakaiproject.assignment2.tool.params.StudentSubmissionParams;
+import org.sakaiproject.site.api.Site;
+import org.sakaiproject.site.api.ToolConfiguration;
 
 import uk.org.ponder.messageutil.MessageLocator;
 import uk.org.ponder.rsf.components.UIBoundBoolean;
@@ -50,6 +53,7 @@ import uk.org.ponder.rsf.components.UICommand;
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIELBinding;
 import uk.org.ponder.rsf.components.UIForm;
+import uk.org.ponder.rsf.components.UIInitBlock;
 import uk.org.ponder.rsf.components.UIInternalLink;
 import uk.org.ponder.rsf.components.UIMessage;
 import uk.org.ponder.rsf.components.UIOutput;
@@ -59,6 +63,7 @@ import uk.org.ponder.rsf.components.decorators.UIAlternativeTextDecorator;
 import uk.org.ponder.rsf.components.decorators.UIColourDecorator;
 import uk.org.ponder.rsf.components.decorators.UIDecorator;
 import uk.org.ponder.rsf.components.decorators.UIFreeAttributeDecorator;
+import uk.org.ponder.rsf.components.decorators.UIStyleDecorator;
 import uk.org.ponder.rsf.components.decorators.UITooltipDecorator;
 import uk.org.ponder.rsf.view.ComponentChecker;
 import uk.org.ponder.rsf.view.ViewComponentProducer;
@@ -104,6 +109,15 @@ public class StudentAssignmentListProducer implements ViewComponentProducer, Vie
         AssignmentListSortViewParams params = (AssignmentListSortViewParams) viewparams;
 
         String currContextId = externalLogic.getCurrentContextId();
+        
+        //DN 2013-04-22: get value of show irubric link
+        boolean isShowiRubricLink = externalGradebookLogic.isShowiRubricLink();
+        Site curSite = null;
+        //if allow show irubric
+        if(isShowiRubricLink){
+            curSite = externalLogic.getSite(currContextId);
+            ToolConfiguration tool = curSite.getToolForCommonId("sakai.gradebook.tool");
+        }
 
         //get paging data
         //List<Assignment2> entries = assignmentLogic.getViewableAssignments();
@@ -114,6 +128,8 @@ public class StudentAssignmentListProducer implements ViewComponentProducer, Vie
 
         UIMessage.make(tofill, "page-title", "assignment2.student-assignment-list.title");
 
+        List gradebookIds = new ArrayList();
+        
         /* 
          * If there are no assignments, print out the message String, otherwise,
          * create the table element.
@@ -314,9 +330,24 @@ public class StudentAssignmentListProducer implements ViewComponentProducer, Vie
                 }
 
             }
-
+            
+            /*
+             * iRubric Column
+             */
+            //DN 2013-04-22: if can show irubric link
+            if(isShowiRubricLink){
+                UIOutput irubricRow = UIOutput.make(row, "irubric");
+                if (assignment.isGraded()) {
+                	irubricRow.decorate(new UIStyleDecorator("gradebook-"+assignment.getGradebookItemId()));
+                	gradebookIds.add(assignment.getGradebookItemId());
+                }
+            }
         }
-        
+         
+        if(isShowiRubricLink){
+            //javascript to set up iRubric initialization
+            UIInitBlock.make(tofill, "irubric-table-init", "asnn2.initIRubricTable", new Object[] {gradebookIds, curSite.getId(), curSite.getId(), externalLogic.getCurrentUserId()});
+        }
         //javascript to add sort tables parsers:
         UIVerbatim.make(tofill, "sortTableParsers", "asnn2.setupStdntListTableParsers();");
     }

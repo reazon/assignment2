@@ -4,14 +4,18 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.assignment2.exception.GradebookItemNotFoundException;
 import org.sakaiproject.assignment2.logic.ExternalGradebookLogic;
+import org.sakaiproject.assignment2.logic.ExternalLogic;
 import org.sakaiproject.assignment2.logic.GradeInformation;
 import org.sakaiproject.assignment2.logic.GradebookItem;
 import org.sakaiproject.assignment2.model.Assignment2;
 import org.sakaiproject.assignment2.model.AssignmentSubmission;
+import org.sakaiproject.site.api.Site;
+import org.sakaiproject.site.api.ToolConfiguration;
 import org.sakaiproject.user.api.User;
 
 import uk.org.ponder.messageutil.MessageLocator;
 import uk.org.ponder.rsf.components.UIContainer;
+import uk.org.ponder.rsf.components.UIInitBlock;
 import uk.org.ponder.rsf.components.UIJointContainer;
 import uk.org.ponder.rsf.components.UIMessage;
 import uk.org.ponder.rsf.components.UIOutput;
@@ -38,6 +42,12 @@ public class GradeDetailsRenderer implements BasicProducer {
     public void setExternalGradebookLogic(ExternalGradebookLogic externalGradebookLogic) {
         this.externalGradebookLogic = externalGradebookLogic;
     }  
+    
+    // Dependency
+    private ExternalLogic externalLogic;
+    public void setExternalLogic(ExternalLogic externalLogic) {
+        this.externalLogic = externalLogic;
+    }
 
     // Dependency
     private String curContext;
@@ -145,6 +155,12 @@ public class GradeDetailsRenderer implements BasicProducer {
                 {
                     UIOutput.make(joint, "comment-row");
                     UIMessage.make(joint, "comment", "assignment2.grade.details.comments.none");
+                }
+
+                //DN 2013-04-22: if can show irubric link
+                if(externalGradebookLogic.isShowiRubricLink()){
+                    Site curSite = externalLogic.getSite(curContext); 
+                    UIInitBlock.make(joint, "irubric-grade-details-init", "asnn2.initIRubricGradeDetails", new Object[] {gradebookItem.getGradebookItemId(), curSite.getId(), curSite.getId(), currentUser.getId()});
                 }
             }
         }
